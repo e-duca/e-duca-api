@@ -36,7 +36,7 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<String> validarSenhaUser(@RequestBody UsuarioModel usuario) {
 
-        Optional<UsuarioModel> optionalUsuarioModel = repository.findByLogin(usuario.getLogin());
+        Optional<UsuarioModel> optionalUsuarioModel = repository.findByUsername(usuario.getUsername());
 
         if (optionalUsuarioModel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado!");
