@@ -34,21 +34,23 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> validarSenhaUser(@RequestBody UsuarioModel usuario) {
+    public ResponseEntity<String> loginUser(@RequestBody UsuarioModel usuario) {
 
         Optional<UsuarioModel> optionalUsuarioModel = repository.findByUsername(usuario.getUsername());
 
-        if (optionalUsuarioModel.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado!");
-        }
-
         UsuarioModel usuarioModel  = optionalUsuarioModel.get();
 
-        if (encoder.matches(usuario.getPassword(), usuarioModel.getPassword())) {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuário válido!");
+        if (!(optionalUsuarioModel.isEmpty()) && encoder.matches(usuario.getPassword(), usuarioModel.getPassword())) {
+            repository.updateAuthenticated(true, usuarioModel.getId());
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário " + usuarioModel.getNome() + " está autenticado!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário e/ou senha inválidos!!");
         }
+    }
 
+    @DeleteMapping("/logoff/{id}")
+    public String logoffUser(@PathVariable int id) {
+        repository.updateAuthenticated(false, id);
+        return "Usuário deslogado com sucesso!";
     }
 }
