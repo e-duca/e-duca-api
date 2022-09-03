@@ -16,7 +16,9 @@ public class UsuarioModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
+    private String email;
     @Column(unique = true)
     private String username;
     private String password;
+    private Boolean authenticated;
 }
