@@ -25,6 +25,7 @@ public abstract class Usuario {
     private LocalDate dataNasc;
     @Column(unique = true)
     @Email
+    @NotBlank
     private String email;
     @NotBlank
     @Size(min = 8)
