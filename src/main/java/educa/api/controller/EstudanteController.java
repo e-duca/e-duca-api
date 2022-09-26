@@ -55,7 +55,8 @@ public class EstudanteController {
         Estudante estudante  = optionalEstudante.get();
 
         if (!(optionalEstudante.isEmpty()) && encoder.matches(validaEstudante.getSenha(), estudante.getSenha())) {
-            repository.updateAuthenticated(true, estudante.getId());
+            estudante.setAutenticado(true);
+            repository.save(estudante);
             return ResponseEntity.status(200).body(estudante);
         } else {
             return ResponseEntity.status(401).build();

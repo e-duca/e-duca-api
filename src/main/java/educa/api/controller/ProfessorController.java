@@ -58,7 +58,8 @@ public class ProfessorController {
         Professor professor  = optionalProfessor.get();
 
         if (!(optionalProfessor.isEmpty()) && encoder.matches(validaProfessor.getSenha(), professor.getSenha())) {
-            repository.updateAuthenticated(true, professor.getId());
+            professor.setAutenticado(true);
+            repository.save(professor);
             return ResponseEntity.status(200).body(professor);
         } else {
             return ResponseEntity.status(401).build();
