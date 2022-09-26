@@ -19,6 +19,12 @@ public class EstudanteController {
     @Autowired
     private PasswordEncoder encoder;
 
+    @PostMapping
+    public ResponseEntity<Estudante> cadastrarEstudante(@RequestBody Estudante estudante) {
+        estudante.setSenha(encoder.encode(estudante.getSenha()));
+        return ResponseEntity.status(201).body(repository.save(estudante));
+    }
+
     @GetMapping
     public ResponseEntity<List<Estudante>> mostrarEstudantes() {
         List<Estudante> list = repository.findAll();
@@ -27,10 +33,19 @@ public class EstudanteController {
                 : ResponseEntity.status(200).body(list);
     }
 
-    @PostMapping
-    public ResponseEntity<Estudante> cadastrarProfessor(@RequestBody Estudante estudante) {
-        estudante.setSenha(encoder.encode(estudante.getSenha()));
-        return ResponseEntity.status(201).body(repository.save(estudante));
+    @PutMapping("/{id}")
+    public ResponseEntity<Estudante> updateEstudante(@PathVariable int id, @RequestBody Estudante newEstudante) {
+        return repository.findById(id)
+                .map(estudante -> {
+                    estudante.setNome(newEstudante.getNome());
+                    estudante.setDataNasc(newEstudante.getDataNasc());
+                    estudante.setEmail(newEstudante.getEmail());
+                    estudante.setSenha(encoder.encode(newEstudante.getSenha()));
+                    return ResponseEntity.status(201).body(repository.save(estudante));
+                })
+                .orElseGet(() -> {
+                    return ResponseEntity.status(400).build();
+                });
     }
 
     @PostMapping("/login")

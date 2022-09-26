@@ -1,5 +1,6 @@
 package educa.api.controller;
 
+import educa.api.model.Estudante;
 import educa.api.model.Professor;
 import educa.api.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,23 @@ public class ProfessorController {
     public ResponseEntity<Professor> cadastrarProfessor(@RequestBody Professor professor) {
         professor.setSenha(encoder.encode(professor.getSenha()));
         return ResponseEntity.status(201).body(repository.save(professor));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Professor> updateProfessor(@PathVariable int id, @RequestBody Professor newProfessor) {
+        return repository.findById(id)
+                .map(professor -> {
+                    professor.setNome(newProfessor.getNome());
+                    professor.setDataNasc(newProfessor.getDataNasc());
+                    professor.setEmail(newProfessor.getEmail());
+                    professor.setSenha(encoder.encode(newProfessor.getSenha()));
+                    professor.setAreaAtuacao(newProfessor.getAreaAtuacao());
+                    professor.setTempoCarreira(newProfessor.getTempoCarreira());
+                    return ResponseEntity.status(201).body(repository.save(professor));
+                })
+                .orElseGet(() -> {
+                    return ResponseEntity.status(400).build();
+                });
     }
 
     @PostMapping("/login")
