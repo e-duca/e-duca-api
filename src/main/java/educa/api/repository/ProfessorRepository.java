@@ -14,8 +14,4 @@ public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
 
     public Optional<Professor> findByEmail(String email);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query("update Professor set autenticado=:status WHERE ID = :id")
-    public void updateAuthenticated(@Param("status") boolean status, @Param("id") int id);
 }

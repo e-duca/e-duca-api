@@ -14,8 +14,4 @@ public interface EstudanteRepository extends JpaRepository<Estudante, Integer> {
 
     public Optional<Estudante> findByEmail(String email);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query("update Estudante set autenticado=:status WHERE ID = :id")
-    public void updateAuthenticated(@Param("status") boolean status, @Param("id") int id);
 }
