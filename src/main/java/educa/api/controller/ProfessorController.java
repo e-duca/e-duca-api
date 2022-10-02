@@ -1,6 +1,5 @@
 package educa.api.controller;
 
-import educa.api.model.Estudante;
 import educa.api.model.Professor;
 import educa.api.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +52,7 @@ public class ProfessorController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Professor> loginProfessor(@RequestBody Professor validaProfessor) {
+    public ResponseEntity<Professor> loginProfessor(@RequestBody @Valid Professor validaProfessor) {
 
         Optional<Professor> optionalProfessor = repository.findByEmail(validaProfessor.getEmail());
         Professor professor  = optionalProfessor.get();
@@ -71,9 +71,10 @@ public class ProfessorController {
         List<Professor> list = repository.findAll();
 
         for (Professor professorAtual : list) {
-            if (professorAtual.getId().equals(id)) {
+            if (professorAtual.getId() == id) {
                 if (professorAtual.isAutenticado()) {
-                    repository.updateAuthenticated(false, id);
+                    professorAtual.setAutenticado(false);
+                    repository.save(professorAtual);
                     return ResponseEntity.status(200).body(String.format("Logoff do usuário %s concluído", professorAtual.getNome()));
                 } else {
                     return ResponseEntity.status(401).body(String.format("Usuário %s NÃO está autenticado", professorAtual.getNome()));

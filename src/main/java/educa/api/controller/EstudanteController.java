@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class EstudanteController {
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<Estudante> cadastrarEstudante(@RequestBody Estudante estudante) {
+    public ResponseEntity<Estudante> cadastrarEstudante(@RequestBody @Valid Estudante estudante) {
         estudante.setSenha(encoder.encode(estudante.getSenha()));
         return ResponseEntity.status(201).body(repository.save(estudante));
     }
@@ -68,9 +69,10 @@ public class EstudanteController {
         List<Estudante> list = repository.findAll();
 
         for (Estudante estudanteAtual : list) {
-            if (estudanteAtual.getId().equals(id)) {
+            if (estudanteAtual.getId() == id) {
                 if (estudanteAtual.isAutenticado()) {
-                    repository.updateAuthenticated(false, id);
+                    estudanteAtual.setAutenticado(false);
+                    repository.save(estudanteAtual);
                     return ResponseEntity.status(200).body(String.format("Logoff do usuário %s concluído", estudanteAtual.getNome()));
                 } else {
                     return ResponseEntity.status(401).body(String.format("Usuário %s NÃO está autenticado", estudanteAtual.getNome()));
