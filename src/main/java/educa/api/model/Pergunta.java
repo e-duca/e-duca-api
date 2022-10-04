@@ -18,10 +18,10 @@ public class Pergunta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToMany
-    private Professor professor;
-    @ManyToMany
-    private Quiz quiz;
+//    @ManyToMany
+//    private Professor professor;
+//    @ManyToMany
+//    private Quiz quiz;
     @Size(min = 5)
     private String pergunta;
     @Size(min = 2)

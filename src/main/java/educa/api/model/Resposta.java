@@ -18,9 +18,9 @@ public class Resposta {
     private int id;
     @Size(min = 3)
     private String resposta;
-    @ManyToMany
-    private Topico topico;
-    @ManyToMany
-    private Estudante estudante;
+//    @ManyToMany
+//    private Topico topico;
+//    @ManyToMany
+//    private Estudante estudante;
 
 }

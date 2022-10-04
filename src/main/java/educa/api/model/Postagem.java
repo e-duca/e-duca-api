@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.persistence.GeneratedValue;
@@ -18,11 +17,11 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Conteudo {
+public class Postagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idConteudo;
+    private int idPostagem;
     @Size(min = 4)
     private String titulo;
     @Size(min = 4)
@@ -31,11 +30,11 @@ public class Conteudo {
     private String url;
     @NotNull
     private int quatCurtidas;
-    @OneToMany
-    private Professor professor;
-    @OneToMany
-    private Estudante estudante;
-    @OneToMany
-    private  Habilidade habilidade;
+//    @OneToMany
+//    private Professor professor;
+//    @OneToMany
+//    private Estudante estudante;
+//    @OneToMany
+//    private  Habilidade habilidade;
 
 }

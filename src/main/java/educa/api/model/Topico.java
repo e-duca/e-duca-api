@@ -31,10 +31,10 @@ public class Topico {
     private LocalDate dataCriacao;
     @Size(min = 2)
     private String status;
-    @OneToMany
-    private Estudante estudante;
-    @OneToMany
-    private Conteudo conteudo;
+//    @OneToMany
+//    private Estudante estudante;
+//    @OneToMany
+//    private Conteudo conteudo;
 
 }
 
