@@ -18,13 +18,21 @@ public abstract class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Size(min = 3)
+    @NotBlank
     private String nome;
+    @Size(min = 3)
+    @NotBlank
+    private String sobrenome;
     @Past
+    @NotNull
     private LocalDate dataNasc;
     @Column(unique = true)
     @Email
+    @NotBlank
     private String email;
     @Size(min = 8)
+    @NotBlank
     private String senha;
     private boolean autenticado;
+
 }
