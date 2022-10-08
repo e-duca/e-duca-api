@@ -1,12 +1,13 @@
 package educa.api.controller;
 
-import educa.api.model.Estudante;
+import educa.api.domain.Estudante;
 import educa.api.repository.EstudanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +21,13 @@ public class EstudanteController {
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<Estudante> cadastrarEstudante(@RequestBody Estudante estudante) {
+    public ResponseEntity<Estudante> create(@RequestBody @Valid Estudante estudante) {
         estudante.setSenha(encoder.encode(estudante.getSenha()));
         return ResponseEntity.status(201).body(repository.save(estudante));
     }
 
     @GetMapping
-    public ResponseEntity<List<Estudante>> mostrarEstudantes() {
+    public ResponseEntity<List<Estudante>> read() {
         List<Estudante> list = repository.findAll();
         return list.isEmpty()
                 ? ResponseEntity.status(204).build()
@@ -34,18 +35,24 @@ public class EstudanteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estudante> updateEstudante(@PathVariable int id, @RequestBody Estudante newEstudante) {
-        return repository.findById(id)
-                .map(estudante -> {
-                    estudante.setNome(newEstudante.getNome());
-                    estudante.setDataNasc(newEstudante.getDataNasc());
-                    estudante.setEmail(newEstudante.getEmail());
-                    estudante.setSenha(encoder.encode(newEstudante.getSenha()));
-                    return ResponseEntity.status(201).body(repository.save(estudante));
-                })
-                .orElseGet(() -> {
-                    return ResponseEntity.status(400).build();
-                });
+    public ResponseEntity<Estudante> update(
+            @PathVariable int id,
+            @RequestBody @Valid Estudante estudante) {
+        if (repository.existsById(id)) {
+            estudante.setId(id);
+            repository.save(estudante);
+            return ResponseEntity.status(200).body(estudante);
+        }
+        return ResponseEntity.status(404).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
     }
 
     @PostMapping("/login")
@@ -68,9 +75,10 @@ public class EstudanteController {
         List<Estudante> list = repository.findAll();
 
         for (Estudante estudanteAtual : list) {
-            if (estudanteAtual.getId().equals(id)) {
+            if (estudanteAtual.getId() == id) {
                 if (estudanteAtual.isAutenticado()) {
-                    repository.updateAuthenticated(false, id);
+                    estudanteAtual.setAutenticado(false);
+                    repository.save(estudanteAtual);
                     return ResponseEntity.status(200).body(String.format("Logoff do usuário %s concluído", estudanteAtual.getNome()));
                 } else {
                     return ResponseEntity.status(401).body(String.format("Usuário %s NÃO está autenticado", estudanteAtual.getNome()));

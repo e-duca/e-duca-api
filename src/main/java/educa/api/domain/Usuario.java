@@ -1,4 +1,4 @@
-package educa.api.model;
+package educa.api.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +17,12 @@ public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
     @Size(min = 3)
+    @NotBlank
     private String nome;
+    @Size(min = 3)
+    @NotBlank
+    private String sobrenome;
     @Past
     @NotNull
     private LocalDate dataNasc;
@@ -27,8 +30,9 @@ public abstract class Usuario {
     @Email
     @NotBlank
     private String email;
-    @NotBlank
     @Size(min = 8)
+    @NotBlank
     private String senha;
     private boolean autenticado;
+
 }
