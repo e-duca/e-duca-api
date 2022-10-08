@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,13 +20,12 @@ public class Topico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idTopico;
     @Size(min = 5)
     private String titulo;
     @Size(min = 5)
     private String descricao;
-    @FutureOrPresent
-    private LocalDate dataCriacao;
+    private LocalDateTime dataCriacao = LocalDateTime.now();
     @Size(min = 2)
     private String status;
 
