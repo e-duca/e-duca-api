@@ -1,4 +1,4 @@
-package educa.api.model;
+package educa.api.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +17,6 @@ public class Professor extends Usuario {
     @NotBlank
     private String areaAtuacao;
     @NotNull
-    private Integer tempoCarreira;
+    private LocalDate inicioAtuazao;
 
 }

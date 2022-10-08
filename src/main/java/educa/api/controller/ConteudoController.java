@@ -1,7 +1,7 @@
 package educa.api.controller;
 
-import educa.api.model.Postagem;
-import educa.api.repository.PostagemRepository;
+import educa.api.domain.Conteudo;
+import educa.api.repository.ConteudoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,31 +10,31 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/postagens")
-public class PostagemController {
+@RequestMapping("/api/conteudos")
+public class ConteudoController {
 
     @Autowired
-    private PostagemRepository repository;
+    private ConteudoRepository repository;
 
     @PostMapping
-    public ResponseEntity<Postagem> create(@RequestBody @Valid Postagem postagem) {
+    public ResponseEntity<Conteudo> create(@RequestBody @Valid Conteudo postagem) {
         return ResponseEntity.status(201).body(repository.save(postagem));
     }
 
     @GetMapping
-    public ResponseEntity<List<Postagem>> read() {
-        List<Postagem> list = repository.findAll();
+    public ResponseEntity<List<Conteudo>> read() {
+        List<Conteudo> list = repository.findAll();
         return list.isEmpty()
                 ? ResponseEntity.status(204).build()
                 : ResponseEntity.status(200).body(list);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Postagem> update(
+    public ResponseEntity<Conteudo> update(
             @PathVariable int id,
-            @RequestBody @Valid Postagem postagem) {
+            @RequestBody @Valid Conteudo postagem) {
         if (repository.existsById(id)) {
-            postagem.setIdPostagem(id);
+            postagem.setIdConteudo(id);
             repository.save(postagem);
             return ResponseEntity.status(200).body(postagem);
         }

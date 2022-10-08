@@ -1,4 +1,4 @@
-package educa.api.model;
+package educa.api.domain;
 
 import lombok.Data;
 

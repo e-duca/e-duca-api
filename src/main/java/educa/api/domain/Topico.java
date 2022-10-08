@@ -1,12 +1,10 @@
-package educa.api.model;
+package educa.api.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import javax.persistence.GeneratedValue;
@@ -31,10 +29,6 @@ public class Topico {
     private LocalDate dataCriacao;
     @Size(min = 2)
     private String status;
-//    @OneToMany
-//    private Estudante estudante;
-//    @OneToMany
-//    private Conteudo conteudo;
 
 }
 
