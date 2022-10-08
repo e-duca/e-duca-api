@@ -3,11 +3,14 @@ package educa.api.controller;
 import educa.api.domain.Conteudo;
 import educa.api.repository.ConteudoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/conteudos")
@@ -22,11 +25,21 @@ public class ConteudoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Conteudo>> read() {
-        List<Conteudo> list = repository.findAll();
-        return list.isEmpty()
-                ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(list);
+    public ResponseEntity<Page<Conteudo>> read(
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(sort = "idConteudo", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable paginacao
+    ) {
+        if (titulo == null) {
+            Page<Conteudo> conteudos = repository.findAll(paginacao);
+            return conteudos.isEmpty()
+                    ? ResponseEntity.status(200).body(conteudos)
+                    : ResponseEntity.status(204).build();
+        } else {
+            Page<Conteudo> conteudos = repository.findByTitulo(titulo, paginacao);
+            return conteudos.isEmpty()
+                    ? ResponseEntity.status(200).body(conteudos)
+                    : ResponseEntity.status(204).build();
+        }
     }
 
     @PutMapping("/{id}")
