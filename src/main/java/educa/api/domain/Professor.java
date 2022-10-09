@@ -17,6 +17,6 @@ public class Professor extends Usuario {
     @NotBlank
     private String areaAtuacao;
     @NotNull
-    private LocalDate inicioAtuazao;
+    private LocalDate inicioAtuacao;
 
 }

@@ -1,13 +1,12 @@
 package educa.api.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -24,6 +23,10 @@ public class Habilidade {
     @NotBlank
     private String codigo;
     @NotBlank
+    @Size(max = 500)
     private String descricao;
+    @ManyToOne
+    @JsonIgnore
+    private Conteudo conteudo;
 
 }
