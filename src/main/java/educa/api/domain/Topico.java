@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,8 +27,12 @@ public class Topico {
     @Size(min = 5)
     private String descricao;
     private LocalDateTime dataCriacao = LocalDateTime.now();
-    @Size(min = 2)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
+    @ManyToOne
+    private Estudante autor;
+    @OneToMany(mappedBy = "topico")
+    private List<Resposta> respostas = new ArrayList<>();
 
 }
 

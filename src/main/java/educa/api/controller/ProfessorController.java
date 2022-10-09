@@ -34,6 +34,14 @@ public class ProfessorController {
                 : ResponseEntity.status(200).body(list);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Professor>> readById(@PathVariable int id) {
+        Optional<Professor> professor = repository.findById(id);
+        return professor.isPresent()
+                ? ResponseEntity.status(200).body(professor)
+                : ResponseEntity.status(204).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Professor> updateProfessor(
             @PathVariable int id,

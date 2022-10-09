@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -30,17 +32,17 @@ public class Conteudo {
     private String url;
     @Size(min = 4)
     private String artigo;
-    @Size(min = 3)
+    @Size(min = 3, max = 5000)
     private String texto;
     private LocalDateTime dataCriacao = LocalDateTime.now();
     @NotNull
     @Min(1)
     private Integer tempoEstimado;
-//    @OneToMany
-//    private Professor professor;
-//    @OneToMany
-//    private Estudante estudante;
-//    @OneToMany
-//    private  Habilidade habilidade;
+    @ManyToOne
+    private Professor autor;
+    @ManyToOne
+    private Habilidade habilidade ;
+    @OneToMany(mappedBy = "conteudo")
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
 
 }

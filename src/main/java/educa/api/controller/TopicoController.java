@@ -1,6 +1,5 @@
 package educa.api.controller;
 
-import educa.api.domain.Conteudo;
 import educa.api.domain.Topico;
 import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/topicos")
