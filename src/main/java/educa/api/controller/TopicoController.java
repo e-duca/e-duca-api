@@ -1,8 +1,13 @@
 package educa.api.controller;
 
+import educa.api.domain.Conteudo;
 import educa.api.domain.Topico;
 import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +27,21 @@ public class TopicoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Topico>> read() {
-        List<Topico> list = repository.findAll();
-        return list.isEmpty()
-                ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(list);
+    public ResponseEntity<Page<Topico>> read(
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(sort = "idTopico", direction = Sort.Direction.ASC, page = 0, size = 10)Pageable paginacao
+            ) {
+        if (titulo == null) {
+            Page<Topico> topicos = repository.findAll(paginacao);
+            return topicos.isEmpty()
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(topicos);
+        } else {
+            Page<Topico> topicos = repository.findByTitulo(titulo, paginacao);
+            return topicos.isEmpty()
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(topicos);
+        }
     }
 
     @PutMapping("/{id}")

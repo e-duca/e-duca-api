@@ -32,13 +32,13 @@ public class ConteudoController {
         if (titulo == null) {
             Page<Conteudo> conteudos = repository.findAll(paginacao);
             return conteudos.isEmpty()
-                    ? ResponseEntity.status(200).body(conteudos)
-                    : ResponseEntity.status(204).build();
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(conteudos);
         } else {
             Page<Conteudo> conteudos = repository.findByTitulo(titulo, paginacao);
             return conteudos.isEmpty()
-                    ? ResponseEntity.status(200).body(conteudos)
-                    : ResponseEntity.status(204).build();
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(conteudos);
         }
     }
 
