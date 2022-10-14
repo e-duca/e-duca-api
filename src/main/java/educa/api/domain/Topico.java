@@ -30,7 +30,7 @@ public class Topico {
     @Enumerated(EnumType.STRING)
     private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
     @ManyToOne
-    private Estudante autor;
+    private Usuario autor;
     @OneToMany(mappedBy = "topico")
     private List<Resposta> respostas = new ArrayList<>();
 

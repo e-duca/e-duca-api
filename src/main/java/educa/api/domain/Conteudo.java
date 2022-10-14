@@ -39,7 +39,7 @@ public class Conteudo {
     @Min(1)
     private Integer tempoEstimado;
     @ManyToOne
-    private Professor autor;
+    private Usuario autor;
     @ManyToOne
     private Habilidade habilidade ;
     @OneToMany(mappedBy = "conteudo")
