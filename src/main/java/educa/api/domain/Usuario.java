@@ -41,11 +41,11 @@ public class Usuario implements UserDetails {
     private String areaAtuacao;
     private LocalDate inicioAtuacao;
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Perfil> perfils= new ArrayList<>();
+    private List<Perfil> perfis = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.perfils;
+        return this.perfis;
     }
 
     @Override

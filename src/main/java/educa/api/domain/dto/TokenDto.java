@@ -1,4 +1,4 @@
-package educa.api.controller.dto;
+package educa.api.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

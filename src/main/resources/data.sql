@@ -5,6 +5,17 @@ INSERT INTO usuario(data_nasc, email, nome, senha, sobrenome, area_atuacao, inic
 ('2004-02-02', 'brenda@educa.com', 'Brenda', '123456', 'Borges', null, null),
 ('2004-03-03', 'rafaela@educa.com', 'Rafaela', '123456', 'Souza', null, null);
 
+INSERT INTO perfil(nome) VALUES
+('PROFESSOR'),
+('ESTUDANTE');
+
+INSERT INTO usuario_perfis(usuario_id, perfis_id) VALUES
+(1,1),
+(2,1),
+(3,2),
+(4,2),
+(5,2);
+
 INSERT INTO habilidade(codigo, descricao) VALUES
 ('EM13MAT308', 'Aplicar as relações métricas, incluindo as leis do seno e do cosseno ou as noções de congruência e semelhança, para resolver e elaborar problemas que envolvem triângulos, em variados contextos.'),
 ('EM13MAT306', 'Resolver e elaborar problemas em contextos que envolvem fenômenos periódicos reais (ondas sonoras, fases da lua, movimentos cíclicos, entre outros) e comparar suas representações com as funções seno e cosseno, no plano cartesiano, com ou sem apoio de aplicativos de álgebra e geometria.');

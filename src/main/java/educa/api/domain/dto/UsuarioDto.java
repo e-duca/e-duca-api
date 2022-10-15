@@ -1,13 +1,9 @@
-package educa.api.controller.dto;
+package educa.api.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class UsuarioDto {
 
     private String email;

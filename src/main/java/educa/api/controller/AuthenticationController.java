@@ -1,9 +1,8 @@
 package educa.api.controller;
 
 import educa.api.config.security.TokenService;
-import educa.api.controller.dto.TokenDto;
-import educa.api.controller.dto.UsuarioDto;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import educa.api.domain.dto.TokenDto;
+import educa.api.domain.dto.UsuarioDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,13 +10,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 public class AuthenticationController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class AuthenticationController {
         try {
             Authentication authentication = authenticationManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-            return ResponseEntity.status(200).body(new TokenDto(token, "Bearer"));
+            return ResponseEntity.ok(new TokenDto(token, "Bearer"));
         } catch (AuthenticationException err) {
             return ResponseEntity.badRequest().build();
         }
