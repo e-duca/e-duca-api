@@ -1,13 +1,18 @@
 package educa.api.controller;
 
 import educa.api.domain.Usuario;
+import educa.api.domain.dto.UsuarioEstudanteDto;
+import educa.api.domain.form.EstudanteForm;
 import educa.api.repository.UsuarioRepository;
+import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,17 +26,26 @@ public class EstudanteController {
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody @Valid Usuario estudante) {
-        estudante.setSenha(encoder.encode(estudante.getSenha()));
-        return ResponseEntity.status(201).body(repository.save(estudante));
+    public ResponseEntity<UsuarioEstudanteDto> create(@RequestBody @Valid EstudanteForm form, UriComponentsBuilder uriBuilder) {
+        form.setSenha(encoder.encode(form.getSenha()));
+        Usuario estudante = form.converter();
+        repository.save(estudante);
+        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> read() {
+    public ResponseEntity<List<UsuarioEstudanteDto>> read() {
         List<Usuario> list = repository.findAll();
-        return list.isEmpty()
+        ListObj<Usuario> listObj = new ListObj<>(100);
+        for (Usuario usuario : list) {
+            if (usuario.getAreaAtuacao() == null && usuario.getInicioAtuacao() == null) {
+                listObj.add(usuario);
+            }
+        }
+        return listObj.getTamanho() == 0
                 ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(list);
+                : ResponseEntity.status(200).body(UsuarioEstudanteDto.converter(listObj.all()));
     }
 
     @GetMapping("/{id}")

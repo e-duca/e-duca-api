@@ -43,6 +43,24 @@ public class Usuario implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Perfil> perfis = new ArrayList<>();
 
+    public Usuario(String nome, String sobrenome, LocalDate dataNasc, String email, String senha) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNasc = dataNasc;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public Usuario(String nome, String sobrenome, LocalDate dataNasc, String email, String senha, String areaAtuacao, LocalDate inicioAtuacao) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNasc = dataNasc;
+        this.email = email;
+        this.senha = senha;
+        this.areaAtuacao = areaAtuacao;
+        this.inicioAtuacao = inicioAtuacao;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.perfis;

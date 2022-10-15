@@ -43,15 +43,15 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/topicos").permitAll() //permite
-                .antMatchers(HttpMethod.GET, "/topicos/*").permitAll() //permite
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/usuarios/estudantes").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/usuarios/estudantes").permitAll()
-                .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/usuarios/professores").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/usuarios/professores").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .anyRequest().authenticated() // o resto bloqueia
                 .and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, repository), UsernamePasswordAuthenticationFilter.class);
+
     }
 
 }

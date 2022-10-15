@@ -1,11 +1,14 @@
 package educa.api.utils;
 
-public class List<T> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListObj<T> {
 
     private T[] vetor;
     private int nroElem;
 
-    public List(int tam) {
+    public ListObj(int tam) {
         this.vetor = (T[]) new Object[tam];
         this.nroElem = 0;
     }
@@ -22,12 +25,12 @@ public class List<T> {
         }
     }
 
-    public void all() {
-        System.out.print("[");
+    public List<T> all() {
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < nroElem; i++) {
-            System.out.print(vetor[i] + ",");
+            list.add(vetor[i]);
         }
-        System.out.print("]");
+        return list;
     }
 
     public int get(T elemento) {

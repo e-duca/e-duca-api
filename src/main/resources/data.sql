@@ -1,9 +1,11 @@
 INSERT INTO usuario(data_nasc, email, nome, senha, sobrenome, area_atuacao, inicio_atuacao) VALUES
 ('1980-09-01', 'claudio@educa.com', 'Claudio', '$2a$10$6lxREBaPXyXsQWKnq.TcJupRVne6dc3OthI4kS/ow3eqYoe0nSwpm', 'Roberto', 'Matemática', '1995-05-01'),
-('1985-01-10', 'bruna@educa.com', 'Bruna', '123456', 'Oliveira', 'Química', '2000-02-12'),
-('2004-01-01', 'thiago@educa.com', 'Thiago', '123456', 'Mendes', null, null),
-('2004-02-02', 'brenda@educa.com', 'Brenda', '123456', 'Borges', null, null),
-('2004-03-03', 'rafaela@educa.com', 'Rafaela', '123456', 'Souza', null, null);
+('1985-01-10', 'bruna@educa.com', 'Bruna', '123456', 'Oliveira', 'Química', '2000-02-12');
+
+INSERT INTO usuario(data_nasc, email, nome, senha, sobrenome) VALUES
+('2004-01-01', 'thiago@educa.com', 'Thiago', '123456', 'Mendes'),
+('2004-02-02', 'brenda@educa.com', 'Brenda', '123456', 'Borges'),
+('2004-03-03', 'rafaela@educa.com', 'Rafaela', '123456', 'Souza');
 
 INSERT INTO perfil(nome) VALUES
 ('PROFESSOR'),
