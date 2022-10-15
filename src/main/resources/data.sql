@@ -1,11 +1,22 @@
-INSERT INTO professor(autenticado, data_nasc, email, nome, senha, sobrenome, area_atuacao, inicio_atuacao) VALUES
-('false', '1980-09-01', 'claudio@educa.com', 'Claudio', '123456', 'Roberto', 'Matemática', '1995-05-01'),
-('false', '1985-01-10', 'bruna@educa.com', 'Bruna', '123456', 'Oliveira', 'Química', '2000-02-12');
+INSERT INTO usuario(data_nasc, email, nome, senha, sobrenome, area_atuacao, inicio_atuacao) VALUES
+('1980-09-01', 'claudio@educa.com', 'Claudio', '$2a$10$6lxREBaPXyXsQWKnq.TcJupRVne6dc3OthI4kS/ow3eqYoe0nSwpm', 'Roberto', 'Matemática', '1995-05-01'),
+('1985-01-10', 'bruna@educa.com', 'Bruna', '123456', 'Oliveira', 'Química', '2000-02-12');
 
-INSERT INTO estudante(autenticado, data_nasc, email, nome, senha, sobrenome) VALUES
-('false', '2004-01-01', 'thiago@educa.com', 'Thiago', '123456', 'Mendes'),
-('false', '2004-02-02', 'brenda@educa.com', 'Brenda', '123456', 'Borges'),
-('false', '2004-03-03', 'rafaela@educa.com', 'Rafaela', '123456', 'Souza');
+INSERT INTO usuario(data_nasc, email, nome, senha, sobrenome) VALUES
+('2004-01-01', 'thiago@educa.com', 'Thiago', '123456', 'Mendes'),
+('2004-02-02', 'brenda@educa.com', 'Brenda', '123456', 'Borges'),
+('2004-03-03', 'rafaela@educa.com', 'Rafaela', '123456', 'Souza');
+
+INSERT INTO perfil(nome) VALUES
+('PROFESSOR'),
+('ESTUDANTE');
+
+INSERT INTO usuario_perfis(usuario_id, perfis_id) VALUES
+(1,1),
+(2,1),
+(3,2),
+(4,2),
+(5,2);
 
 INSERT INTO habilidade(codigo, descricao) VALUES
 ('EM13MAT308', 'Aplicar as relações métricas, incluindo as leis do seno e do cosseno ou as noções de congruência e semelhança, para resolver e elaborar problemas que envolvem triângulos, em variados contextos.'),

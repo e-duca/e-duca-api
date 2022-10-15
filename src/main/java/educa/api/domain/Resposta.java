@@ -25,6 +25,6 @@ public class Resposta {
     @JsonIgnore
     private Topico topico;
     @ManyToOne
-    private Estudante autor;
+    private Usuario autor;
 
 }

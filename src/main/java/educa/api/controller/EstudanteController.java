@@ -1,13 +1,18 @@
 package educa.api.controller;
 
-import educa.api.domain.Estudante;
-import educa.api.repository.EstudanteRepository;
+import educa.api.domain.Usuario;
+import educa.api.domain.dto.UsuarioEstudanteDto;
+import educa.api.domain.form.EstudanteForm;
+import educa.api.repository.UsuarioRepository;
+import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,36 +21,45 @@ import java.util.Optional;
 public class EstudanteController {
 
     @Autowired
-    private EstudanteRepository repository;
+    private UsuarioRepository repository;
     @Autowired
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<Estudante> create(@RequestBody @Valid Estudante estudante) {
-        estudante.setSenha(encoder.encode(estudante.getSenha()));
-        return ResponseEntity.status(201).body(repository.save(estudante));
+    public ResponseEntity<UsuarioEstudanteDto> create(@RequestBody @Valid EstudanteForm form, UriComponentsBuilder uriBuilder) {
+        form.setSenha(encoder.encode(form.getSenha()));
+        Usuario estudante = form.converter();
+        repository.save(estudante);
+        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
     }
 
     @GetMapping
-    public ResponseEntity<List<Estudante>> read() {
-        List<Estudante> list = repository.findAll();
-        return list.isEmpty()
+    public ResponseEntity<List<UsuarioEstudanteDto>> read() {
+        List<Usuario> list = repository.findAll();
+        ListObj<Usuario> listObj = new ListObj<>(100);
+        for (Usuario usuario : list) {
+            if (usuario.getAreaAtuacao() == null && usuario.getInicioAtuacao() == null) {
+                listObj.add(usuario);
+            }
+        }
+        return listObj.getTamanho() == 0
                 ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(list);
+                : ResponseEntity.status(200).body(UsuarioEstudanteDto.converter(listObj.all()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Estudante>> read(@PathVariable int id) {
-        Optional<Estudante> estudante = repository.findById(id);
+    public ResponseEntity<Optional<Usuario>> read(@PathVariable int id) {
+        Optional<Usuario> estudante = repository.findById(id);
         return estudante.isPresent()
                 ? ResponseEntity.status(200).body(estudante)
                 : ResponseEntity.status(204).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estudante> update(
+    public ResponseEntity<Usuario> update(
             @PathVariable int id,
-            @RequestBody @Valid Estudante estudante) {
+            @RequestBody @Valid Usuario estudante) {
         if (repository.existsById(id)) {
             estudante.setId(id);
             repository.save(estudante);
@@ -63,36 +77,4 @@ public class EstudanteController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Estudante> loginEstudante(@RequestBody Estudante validaEstudante) {
-
-        Optional<Estudante> optionalEstudante = repository.findByEmail(validaEstudante.getEmail());
-        Estudante estudante  = optionalEstudante.get();
-
-        if (!(optionalEstudante.isEmpty()) && encoder.matches(validaEstudante.getSenha(), estudante.getSenha())) {
-            estudante.setAutenticado(true);
-            repository.save(estudante);
-            return ResponseEntity.status(200).body(estudante);
-        } else {
-            return ResponseEntity.status(401).build();
-        }
-    }
-
-    @DeleteMapping("/logoff/{id}")
-    public ResponseEntity logoffEstudante(@PathVariable int id) {
-        List<Estudante> list = repository.findAll();
-
-        for (Estudante estudanteAtual : list) {
-            if (estudanteAtual.getId() == id) {
-                if (estudanteAtual.isAutenticado()) {
-                    estudanteAtual.setAutenticado(false);
-                    repository.save(estudanteAtual);
-                    return ResponseEntity.status(200).body(String.format("Logoff do usuário %s concluído", estudanteAtual.getNome()));
-                } else {
-                    return ResponseEntity.status(401).body(String.format("Usuário %s NÃO está autenticado", estudanteAtual.getNome()));
-                }
-            }
-        }
-        return ResponseEntity.status(403).body(String.format("Usuário do Id %d não encontrado", id));
-    }
 }

@@ -1,13 +1,18 @@
 package educa.api.controller;
 
-import educa.api.domain.Professor;
-import educa.api.repository.ProfessorRepository;
+import educa.api.domain.Usuario;
+import educa.api.domain.dto.UsuarioProfessorDto;
+import educa.api.domain.form.ProfessorForm;
+import educa.api.repository.UsuarioRepository;
+import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,36 +21,45 @@ import java.util.Optional;
 public class ProfessorController {
 
     @Autowired
-    private ProfessorRepository repository;
+    private UsuarioRepository repository;
     @Autowired
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<Professor> create(@RequestBody @Valid Professor professor) {
-        professor.setSenha(encoder.encode(professor.getSenha()));
-        return ResponseEntity.status(201).body(repository.save(professor));
+    public ResponseEntity<UsuarioProfessorDto> create(@RequestBody @Valid ProfessorForm form, UriComponentsBuilder uriBuilder) {
+        form.setSenha(encoder.encode(form.getSenha()));
+        Usuario professor = form.converter();
+        repository.save(professor);
+        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UsuarioProfessorDto(professor));
     }
 
     @GetMapping
-    public ResponseEntity<List<Professor>> read() {
-        List<Professor> list = repository.findAll();
-        return list.isEmpty()
+    public ResponseEntity<List<UsuarioProfessorDto>> read() {
+        List<Usuario> list = repository.findAll();
+        ListObj<Usuario> listObj = new ListObj<>(100);
+        for (Usuario usuario : list) {
+            if (!(usuario.getAreaAtuacao() == null && usuario.getInicioAtuacao() == null)) {
+                listObj.add(usuario);
+            }
+        }
+        return listObj.getTamanho() == 0
                 ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(list);
+                : ResponseEntity.status(200).body(UsuarioProfessorDto.converter(listObj.all()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Professor>> readById(@PathVariable int id) {
-        Optional<Professor> professor = repository.findById(id);
+    public ResponseEntity<Optional<Usuario>> readById(@PathVariable int id) {
+        Optional<Usuario> professor = repository.findById(id);
         return professor.isPresent()
                 ? ResponseEntity.status(200).body(professor)
                 : ResponseEntity.status(204).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Professor> updateProfessor(
+    public ResponseEntity<Usuario> updateProfessor(
             @PathVariable int id,
-            @RequestBody @Valid Professor professor) {
+            @RequestBody @Valid Usuario professor) {
         if (repository.existsById(id)) {
             professor.setId(id);
             repository.save(professor);
@@ -63,36 +77,4 @@ public class ProfessorController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Professor> loginProfessor(@RequestBody @Valid Professor validaProfessor) {
-
-        Optional<Professor> optionalProfessor = repository.findByEmail(validaProfessor.getEmail());
-        Professor professor  = optionalProfessor.get();
-
-        if (!(optionalProfessor.isEmpty()) && encoder.matches(validaProfessor.getSenha(), professor.getSenha())) {
-            professor.setAutenticado(true);
-            repository.save(professor);
-            return ResponseEntity.status(200).body(professor);
-        } else {
-            return ResponseEntity.status(401).build();
-        }
-    }
-
-    @DeleteMapping("/logoff/{id}")
-    public ResponseEntity logoffProfessor(@PathVariable int id) {
-        List<Professor> list = repository.findAll();
-
-        for (Professor professorAtual : list) {
-            if (professorAtual.getId() == id) {
-                if (professorAtual.isAutenticado()) {
-                    professorAtual.setAutenticado(false);
-                    repository.save(professorAtual);
-                    return ResponseEntity.status(200).body(String.format("Logoff do usuário %s concluído", professorAtual.getNome()));
-                } else {
-                    return ResponseEntity.status(401).body(String.format("Usuário %s NÃO está autenticado", professorAtual.getNome()));
-                }
-            }
-        }
-        return ResponseEntity.status(403).body(String.format("Usuário do Id %d não encontrado", id));
-    }
 }
