@@ -1,4 +1,4 @@
-package educa.api.domain.dto;
+package educa.api.controller.dto;
 
 import lombok.Data;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

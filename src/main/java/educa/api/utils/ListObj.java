@@ -1,5 +1,7 @@
 package educa.api.utils;
 
+import educa.api.domain.Conteudo;
+
 import java.util.ArrayList;
 import java.util.List;
 
