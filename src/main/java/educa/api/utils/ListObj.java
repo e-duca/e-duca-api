@@ -27,6 +27,10 @@ public class ListObj<T> {
         }
     }
 
+    public void adicionaIndice(int indice, T elemento) {
+        vetor[indice] = elemento;
+    }
+
     public List<T> all() {
         List<T> list = new ArrayList<>();
         for (int i = 0; i < nroElem; i++) {

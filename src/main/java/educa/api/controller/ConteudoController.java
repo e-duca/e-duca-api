@@ -2,6 +2,7 @@ package educa.api.controller;
 
 import educa.api.domain.Conteudo;
 import educa.api.repository.ConteudoRepository;
+import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/conteudos")
@@ -61,6 +63,31 @@ public class ConteudoController {
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<List<Conteudo>> getOrderConteudos() {
+        List<Conteudo> list = repository.findAll();
+        ListObj<Conteudo> listObj = new ListObj<>(list.size());
+
+        for (Conteudo conteudo : list) {
+            listObj.add(conteudo);
+        }
+
+        for (int i = 0; i < listObj.getTamanho(); i++) {
+            for (int j = i+1; j < listObj.getTamanho(); j++) {
+                if (listObj.getElemento(j).getTempoEstimado() < listObj.getElemento(i).getTempoEstimado()) {
+                    Conteudo aux = listObj.getElemento(i);
+                    listObj.adicionaIndice(i, listObj.getElemento(j));
+                    listObj.adicionaIndice(j, aux);
+                }
+            }
+        }
+
+        return listObj.getTamanho() == 0
+                ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(listObj.all());
+
     }
 
 }
