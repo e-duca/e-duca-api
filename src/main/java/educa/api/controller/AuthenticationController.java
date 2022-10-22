@@ -1,8 +1,8 @@
 package educa.api.controller;
 
 import educa.api.config.security.TokenService;
-import educa.api.domain.dto.TokenDto;
-import educa.api.domain.dto.UsuarioLoginDto;
+import educa.api.controller.dto.TokenDto;
+import educa.api.controller.dto.UsuarioLoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     @Autowired
