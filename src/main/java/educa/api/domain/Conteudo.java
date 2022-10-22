@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,9 +33,7 @@ public class Conteudo {
     @Size(min = 3, max = 5000)
     private String texto;
     private LocalDateTime dataCriacao = LocalDateTime.now();
-    @NotNull
-    @Min(1)
-    private Integer tempoEstimado;
+    private int tempoEstimado;
     @ManyToOne
     private Usuario autor;
     @ManyToOne

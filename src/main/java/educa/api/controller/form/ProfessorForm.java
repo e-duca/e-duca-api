@@ -1,4 +1,4 @@
-package educa.api.domain.form;
+package educa.api.controller.form;
 
 import educa.api.domain.Usuario;
 import lombok.Data;
@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-public class EstudanteForm {
+public class ProfessorForm {
 
     @Size(min = 3)
     @NotBlank
@@ -26,8 +26,13 @@ public class EstudanteForm {
     @Size(min = 8)
     @NotBlank
     private String senha;
+    @NotBlank
+    private String areaAtuacao;
+    @NotNull
+    private LocalDate inicioAtuacao;
 
     public Usuario converter() {
-        return new Usuario(nome, sobrenome, dataNasc, email, senha);
+        return new Usuario(nome, sobrenome, dataNasc, email, senha, areaAtuacao, inicioAtuacao);
     }
+
 }

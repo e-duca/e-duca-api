@@ -1,4 +1,4 @@
-package educa.api.domain.dto;
+package educa.api.controller.dto;
 
 import educa.api.domain.Usuario;
 import lombok.Getter;

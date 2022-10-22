@@ -1,8 +1,8 @@
 package educa.api.controller;
 
 import educa.api.domain.Usuario;
-import educa.api.domain.dto.UsuarioEstudanteDto;
-import educa.api.domain.form.EstudanteForm;
+import educa.api.controller.dto.UsuarioEstudanteDto;
+import educa.api.controller.form.EstudanteForm;
 import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
