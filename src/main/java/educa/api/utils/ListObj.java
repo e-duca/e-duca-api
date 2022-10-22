@@ -1,5 +1,7 @@
 package educa.api.utils;
 
+import educa.api.domain.Conteudo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,10 @@ public class ListObj<T> {
         } else {
             System.out.println("Lista Cheia!");
         }
+    }
+
+    public void adicionaIndice(int indice, T elemento) {
+        vetor[indice] = elemento;
     }
 
     public List<T> all() {
