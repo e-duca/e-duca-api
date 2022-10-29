@@ -1,5 +1,6 @@
 package educa.api.controller.dto;
 
+import educa.api.domain.Perfil;
 import educa.api.domain.Usuario;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ public class UsuarioProfessorDto {
     private String email;
     private String areaAtuacao;
     private LocalDate inicioAtuacao;
+    private List<Perfil> perfil;
 
     public UsuarioProfessorDto(Usuario usuario) {
         this.id = usuario.getId();
@@ -26,6 +28,7 @@ public class UsuarioProfessorDto {
         this.email = usuario.getEmail();
         this.areaAtuacao = usuario.getAreaAtuacao();
         this.inicioAtuacao = usuario.getInicioAtuacao();
+        this.perfil = usuario.getPerfis();
     }
 
     public static List<UsuarioProfessorDto> converter(List<Usuario> usuarios) {

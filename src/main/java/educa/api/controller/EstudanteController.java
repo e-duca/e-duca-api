@@ -1,8 +1,10 @@
 package educa.api.controller;
 
+import educa.api.domain.Perfil;
 import educa.api.domain.Usuario;
 import educa.api.controller.dto.UsuarioEstudanteDto;
 import educa.api.controller.form.EstudanteForm;
+import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class EstudanteController {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
     @Autowired
     private PasswordEncoder encoder;
 
@@ -29,6 +34,8 @@ public class EstudanteController {
     public ResponseEntity<UsuarioEstudanteDto> create(@RequestBody @Valid EstudanteForm form, UriComponentsBuilder uriBuilder) {
         form.setSenha(encoder.encode(form.getSenha()));
         Usuario estudante = form.converter();
+        Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
+        estudante.adicionarPerfil(perfilEstudante);
         repository.save(estudante);
         URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getId()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
@@ -49,30 +56,27 @@ public class EstudanteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Usuario>> read(@PathVariable int id) {
+    public ResponseEntity<UsuarioEstudanteDto> read(@PathVariable int id) {
         Optional<Usuario> estudante = repository.findById(id);
-        return estudante.isPresent()
-                ? ResponseEntity.status(200).body(estudante)
-                : ResponseEntity.status(204).build();
+        if (repository.existsById(id)) {
+            if (estudante.get().getAreaAtuacao() == null && estudante.get().getInicioAtuacao() == null) {
+                return ResponseEntity.status(200).body(new UsuarioEstudanteDto(estudante.get()));
+            }
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(400).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> update(
+    public ResponseEntity<UsuarioEstudanteDto> update(
             @PathVariable int id,
             @RequestBody @Valid Usuario estudante) {
         if (repository.existsById(id)) {
             estudante.setId(id);
+            Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
+            estudante.adicionarPerfil(perfilEstudante);
             repository.save(estudante);
-            return ResponseEntity.status(200).body(estudante);
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(new UsuarioEstudanteDto(estudante));
         }
         return ResponseEntity.status(404).build();
     }

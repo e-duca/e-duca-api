@@ -1,11 +1,14 @@
 package educa.api.controller;
 
+import educa.api.domain.Perfil;
 import educa.api.domain.Usuario;
 import educa.api.controller.dto.UsuarioProfessorDto;
 import educa.api.controller.form.ProfessorForm;
+import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,10 @@ public class ProfessorController {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     @Autowired
     private PasswordEncoder encoder;
 
@@ -29,6 +36,8 @@ public class ProfessorController {
     public ResponseEntity<UsuarioProfessorDto> create(@RequestBody @Valid ProfessorForm form, UriComponentsBuilder uriBuilder) {
         form.setSenha(encoder.encode(form.getSenha()));
         Usuario professor = form.converter();
+        Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+        professor.adicionarPerfil(perfilProfessor);
         repository.save(professor);
         URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getId()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioProfessorDto(professor));
@@ -49,11 +58,15 @@ public class ProfessorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Usuario>> readById(@PathVariable int id) {
+    public ResponseEntity<UsuarioProfessorDto> read(@PathVariable int id) {
         Optional<Usuario> professor = repository.findById(id);
-        return professor.isPresent()
-                ? ResponseEntity.status(200).body(professor)
-                : ResponseEntity.status(204).build();
+        if (repository.existsById(id)) {
+            if (!(professor.get().getAreaAtuacao() == null && professor.get().getInicioAtuacao() == null)) {
+                return ResponseEntity.status(200).body(new UsuarioProfessorDto(professor.get()));
+            }
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(400).build();
     }
 
     @PutMapping("/{id}")
@@ -62,17 +75,10 @@ public class ProfessorController {
             @RequestBody @Valid Usuario professor) {
         if (repository.existsById(id)) {
             professor.setId(id);
+            Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+            professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);
             return ResponseEntity.status(200).body(professor);
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
     }

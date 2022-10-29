@@ -20,6 +20,7 @@ public class Perfil implements GrantedAuthority {
     private String nome;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return this.nome;
     }
