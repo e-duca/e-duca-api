@@ -10,6 +10,7 @@ import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -69,12 +70,13 @@ public class ProfessorController {
         return ResponseEntity.status(400).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<Usuario> updateProfessor(
-            @PathVariable int id,
-            @RequestBody @Valid Usuario professor) {
-        if (repository.existsById(id)) {
-            professor.setId(id);
+            @RequestBody @Valid Usuario professor,
+            @AuthenticationPrincipal Usuario usuario) {
+        if (repository.existsById(usuario.getId())) {
+            professor.setId(usuario.getId());
+            professor.setSenha(encoder.encode(professor.getSenha()));
             Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
             professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);

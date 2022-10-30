@@ -9,6 +9,7 @@ import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -67,12 +68,13 @@ public class EstudanteController {
         return ResponseEntity.status(400).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioEstudanteDto> update(
-            @PathVariable int id,
-            @RequestBody @Valid Usuario estudante) {
-        if (repository.existsById(id)) {
-            estudante.setId(id);
+    @PutMapping
+    public ResponseEntity<UsuarioEstudanteDto> updateEstudante(
+            @RequestBody @Valid Usuario estudante,
+            @AuthenticationPrincipal Usuario usuario) {
+        if (repository.existsById(usuario.getId())) {
+            estudante.setId(usuario.getId());
+            estudante.setSenha(encoder.encode(estudante.getSenha()));
             Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
             estudante.adicionarPerfil(perfilEstudante);
             repository.save(estudante);
