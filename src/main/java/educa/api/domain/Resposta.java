@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -21,7 +22,8 @@ public class Resposta {
     private int idResposta;
     @Size(min = 3, max = 5000)
     private String resposta;
-    private LocalDateTime dataCriacao = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime dataCriacao;
     @ManyToOne
     @JsonIgnore
     private Topico topico;
