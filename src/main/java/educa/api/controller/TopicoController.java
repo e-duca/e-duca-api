@@ -1,6 +1,7 @@
 package educa.api.controller;
 
 import educa.api.domain.Topico;
+import educa.api.domain.Usuario;
 import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +22,8 @@ public class TopicoController {
     private TopicoRepository repository;
 
     @PostMapping
-    public ResponseEntity<Topico> create(@RequestBody @Valid Topico topico) {
+    public ResponseEntity<Topico> create(@RequestBody @Valid Topico topico, @AuthenticationPrincipal Usuario usuario) {
+        topico.setUsuario(usuario);
         return ResponseEntity.status(201).body(repository.save(topico));
     }
 
@@ -55,10 +58,14 @@ public class TopicoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id, @AuthenticationPrincipal Usuario usuario) {
         if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return ResponseEntity.status(200).build();
+            Topico topico = repository.findById(id).get();
+            if (topico.getUsuario().getIdUsuario() == usuario.getIdUsuario()) {
+                repository.deleteById(id);
+                return ResponseEntity.status(200).build();
+            }
+            return ResponseEntity.status(401).build();
         }
         return ResponseEntity.status(404).build();
     }

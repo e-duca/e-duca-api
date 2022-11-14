@@ -36,7 +36,7 @@ public class ProfessorController {
     public ResponseEntity<UsuarioProfessorDto> create(@RequestBody @Valid ProfessorForm form, UriComponentsBuilder uriBuilder) {
         form.setSenha(encoder.encode(form.getSenha()));
         Usuario professor = form.converter();
-        Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+        Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
         professor.adicionarPerfil(perfilProfessor);
         repository.save(professor);
         URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getIdUsuario()).toUri();
@@ -76,7 +76,7 @@ public class ProfessorController {
         if (repository.existsById(usuario.getIdUsuario())) {
             professor.setIdUsuario(usuario.getIdUsuario());
             professor.setSenha(encoder.encode(professor.getSenha()));
-            Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+            Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
             professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);
             return ResponseEntity.status(200).body(professor);

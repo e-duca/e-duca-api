@@ -43,7 +43,7 @@ public class Conteudo {
     @NotNull
     private int tempoEstimado;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
     @ManyToOne
     @NotNull
     private Habilidade habilidade;

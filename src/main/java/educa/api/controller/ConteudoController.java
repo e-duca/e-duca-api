@@ -37,7 +37,7 @@ public class ConteudoController {
         Optional<Habilidade> habilidade = habilidadeRepository.findByCodigo(postagem.getHabilidade().getCodigo());
 
         if (habilidade.isPresent()) {
-            postagem.setAutor(usuario);
+            postagem.setUsuario(usuario);
             postagem.setHabilidade(habilidade.get());
             return ResponseEntity.status(201).body(repository.save(postagem));
         }
@@ -69,12 +69,12 @@ public class ConteudoController {
             @AuthenticationPrincipal Usuario usuario) {
 
         if (titulo == null) {
-            Page<Conteudo> conteudos = repository.findByAutorIdUsuario(usuario.getIdUsuario(), paginacao);
+            Page<Conteudo> conteudos = repository.findByUsuarioIdUsuario(usuario.getIdUsuario(), paginacao);
             return conteudos.isEmpty()
                     ? ResponseEntity.status(204).build()
                     : ResponseEntity.status(200).body(conteudos);
         } else {
-            Page<Conteudo> conteudos = repository.findByTituloAndAutorIdUsuario(titulo, usuario.getIdUsuario(), paginacao);
+            Page<Conteudo> conteudos = repository.findByTituloAndUsuarioIdUsuario(titulo, usuario.getIdUsuario(), paginacao);
             return conteudos.isEmpty()
                     ? ResponseEntity.status(204).build()
                     : ResponseEntity.status(200).body(conteudos);
@@ -91,14 +91,14 @@ public class ConteudoController {
             Optional<Habilidade> habilidade = habilidadeRepository.findByCodigo(postagem.getHabilidade().getCodigo());
             Optional<Conteudo> validaAutor = repository.findById(id);
 
-            if (validaAutor.get().getAutor().getEmail().equals(usuario.getEmail())) {
+            if (validaAutor.get().getUsuario().getEmail().equals(usuario.getEmail())) {
                 Optional<Conteudo> conteudo = repository.findById(id);
                 conteudo.get().setTitulo(postagem.getTitulo());
                 conteudo.get().setUrl(postagem.getUrl());
                 conteudo.get().setArtigo(postagem.getArtigo());
                 conteudo.get().setTexto(postagem.getTexto());
                 conteudo.get().setUrlVideo(postagem.getUrlVideo());
-                conteudo.get().setAutor(usuario);
+                conteudo.get().setUsuario(usuario);
                 conteudo.get().setHabilidade(habilidade.get());
                 repository.save(conteudo.get());
                 return ResponseEntity.status(200).body(conteudo.get());
@@ -112,7 +112,7 @@ public class ConteudoController {
     public ResponseEntity<Void> delete(@PathVariable int id, @AuthenticationPrincipal Usuario usuario) {
         Optional<Conteudo> validaAutor = repository.findById(id);
         if (repository.existsById(id)) {
-            if (validaAutor.get().getAutor().getEmail().equals(usuario.getEmail())) {
+            if (validaAutor.get().getUsuario().getEmail().equals(usuario.getEmail())) {
                 repository.deleteById(id);
                 return ResponseEntity.status(200).build();
             }

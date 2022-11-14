@@ -26,6 +26,6 @@ public class Avaliacao {
     @JsonIgnore
     private Conteudo conteudo;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
 
 }
