@@ -1,6 +1,6 @@
 package educa.api.config.security;
 
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

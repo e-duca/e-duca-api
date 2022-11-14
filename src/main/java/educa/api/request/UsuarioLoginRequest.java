@@ -1,10 +1,10 @@
-package educa.api.controller.dto;
+package educa.api.request;
 
 import lombok.Data;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Data
-public class UsuarioLoginDto {
+public class UsuarioLoginRequest {
 
     private String email;
     private String senha;

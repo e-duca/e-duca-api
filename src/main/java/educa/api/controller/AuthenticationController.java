@@ -1,8 +1,8 @@
 package educa.api.controller;
 
 import educa.api.config.security.TokenService;
-import educa.api.controller.dto.TokenDto;
-import educa.api.controller.dto.UsuarioLoginDto;
+import educa.api.response.TokenResponse;
+import educa.api.request.UsuarioLoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,14 +27,14 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginRequest usuarioLoginDto) {
         UsernamePasswordAuthenticationToken dadosLogin = usuarioLoginDto.converter();
         try {
             Authentication authentication = authenticationManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-            return ResponseEntity.ok(new TokenDto(token, "Bearer"));
+            return ResponseEntity.status(200).body(new TokenResponse(token, "Bearer"));
         } catch (AuthenticationException err) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400).build();
         }
     }
 }

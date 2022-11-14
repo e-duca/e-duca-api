@@ -1,6 +1,6 @@
 package educa.api.config.security;
 
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,8 +1,8 @@
 package educa.api.controller;
 
-import educa.api.controller.dto.RespostaDto;
-import educa.api.domain.Resposta;
-import educa.api.domain.Usuario;
+import educa.api.request.RespostaRequest;
+import educa.api.request.domain.Resposta;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.RespostaRepository;
 import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class RespostaController {
     private TopicoRepository topicoRepository;
 
     @PostMapping
-    public ResponseEntity<Resposta> create(@RequestBody @Valid RespostaDto newResposta, @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Resposta> create(@RequestBody @Valid RespostaRequest newResposta, @AuthenticationPrincipal Usuario usuario) {
         Resposta resposta = new Resposta();
         resposta.setTopico(topicoRepository.findById(newResposta.getIdTopico()).get());
         resposta.setUsuario(usuario);
@@ -33,7 +33,7 @@ public class RespostaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Resposta> update(@PathVariable int id, @RequestBody @Valid RespostaDto newResposta, @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Resposta> update(@PathVariable int id, @RequestBody @Valid RespostaRequest newResposta, @AuthenticationPrincipal Usuario usuario) {
         if (respostaRepository.existsById(id)) {
             Resposta resposta = respostaRepository.findById(id).get();
             if (resposta.getUsuario().getIdUsuario() == usuario.getIdUsuario()) {

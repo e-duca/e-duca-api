@@ -1,4 +1,4 @@
-package educa.api.controller.dto;
+package educa.api.request;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @Getter
-public class AvaliacaoDto {
+public class AvaliacaoRequest {
 
     @Min(1)
     private int idConteudo;

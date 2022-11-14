@@ -1,14 +1,10 @@
 package educa.api.controller;
 
-import educa.api.controller.dto.AvaliacaoDto;
-import educa.api.controller.dto.RespostaDto;
-import educa.api.domain.Avaliacao;
-import educa.api.domain.Resposta;
-import educa.api.domain.Usuario;
+import educa.api.request.AvaliacaoRequest;
+import educa.api.request.domain.Avaliacao;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.AvaliacaoRepository;
 import educa.api.repository.ConteudoRepository;
-import educa.api.repository.RespostaRepository;
-import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +24,7 @@ public class AvaliacaoController {
     private ConteudoRepository conteudoRepository;
 
     @PostMapping
-    public ResponseEntity<Avaliacao> create(@RequestBody @Valid AvaliacaoDto newAvaliacao, @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Avaliacao> create(@RequestBody @Valid AvaliacaoRequest newAvaliacao, @AuthenticationPrincipal Usuario usuario) {
         Avaliacao avaliacao = new Avaliacao();
         avaliacao.setConteudo(conteudoRepository.findById(newAvaliacao.getIdConteudo()).get());
         avaliacao.setUsuario(usuario);
