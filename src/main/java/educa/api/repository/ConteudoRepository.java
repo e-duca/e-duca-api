@@ -9,8 +9,8 @@ public interface ConteudoRepository extends JpaRepository<Conteudo, Integer> {
 
     Page<Conteudo> findByTitulo(String titulo, Pageable paginacao);
 
-    Page<Conteudo> findByAutorId(int id, Pageable paginacao);
+    Page<Conteudo> findByAutorIdUsuario(int id, Pageable paginacao);
 
-    Page<Conteudo> findByTituloAndAutorId(String titulo, int id, Pageable paginacao);
+    Page<Conteudo> findByTituloAndAutorIdUsuario(String titulo, int id, Pageable paginacao);
 
 }

@@ -69,12 +69,12 @@ public class ConteudoController {
             @AuthenticationPrincipal Usuario usuario) {
 
         if (titulo == null) {
-            Page<Conteudo> conteudos = repository.findByAutorId(usuario.getId(), paginacao);
+            Page<Conteudo> conteudos = repository.findByAutorIdUsuario(usuario.getIdUsuario(), paginacao);
             return conteudos.isEmpty()
                     ? ResponseEntity.status(204).build()
                     : ResponseEntity.status(200).body(conteudos);
         } else {
-            Page<Conteudo> conteudos = repository.findByTituloAndAutorId(titulo, usuario.getId(), paginacao);
+            Page<Conteudo> conteudos = repository.findByTituloAndAutorIdUsuario(titulo, usuario.getIdUsuario(), paginacao);
             return conteudos.isEmpty()
                     ? ResponseEntity.status(204).build()
                     : ResponseEntity.status(200).body(conteudos);
