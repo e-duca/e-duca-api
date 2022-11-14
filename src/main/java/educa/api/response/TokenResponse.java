@@ -1,4 +1,4 @@
-package educa.api.controller.dto;
+package educa.api.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenDto {
+public class TokenResponse {
 
     private String token;
     private String tipo;

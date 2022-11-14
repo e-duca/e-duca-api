@@ -1,9 +1,9 @@
 package educa.api.controller;
 
-import educa.api.controller.form.ConteudoForm;
-import educa.api.domain.Conteudo;
-import educa.api.domain.Habilidade;
-import educa.api.domain.Usuario;
+import educa.api.request.ConteudoRequest;
+import educa.api.request.domain.Conteudo;
+import educa.api.request.domain.Habilidade;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.ConteudoRepository;
 import educa.api.repository.HabilidadeRepository;
 import educa.api.utils.ListObj;
@@ -85,7 +85,7 @@ public class ConteudoController {
     @PutMapping("/{id}")
     public ResponseEntity<Conteudo> update(
             @PathVariable int id,
-            @RequestBody @Valid ConteudoForm postagem,
+            @RequestBody @Valid ConteudoRequest postagem,
             @AuthenticationPrincipal Usuario usuario) {
         if (repository.existsById(id)) {
             Optional<Habilidade> habilidade = habilidadeRepository.findByCodigo(postagem.getHabilidade().getCodigo());

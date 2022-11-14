@@ -1,7 +1,7 @@
 package educa.api.controller;
 
-import educa.api.domain.Topico;
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Topico;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

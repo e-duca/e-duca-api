@@ -1,6 +1,6 @@
 package educa.api.repository;
 
-import educa.api.domain.Habilidade;
+import educa.api.request.domain.Habilidade;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

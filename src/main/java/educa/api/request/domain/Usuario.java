@@ -1,4 +1,4 @@
-package educa.api.domain;
+package educa.api.request.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -39,10 +39,12 @@ public class Usuario implements UserDetails {
     private String email;
     @Size(min = 8)
     @NotBlank
+    @JsonIgnore
     private String senha;
     private String areaAtuacao;
     private LocalDate inicioAtuacao;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Perfil> perfis = new ArrayList<>();
 
     public Usuario(String nome, String sobrenome, LocalDate dataNasc, String email, String senha) {

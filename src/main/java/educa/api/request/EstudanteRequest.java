@@ -1,6 +1,6 @@
-package educa.api.controller.form;
+package educa.api.request;
 
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Usuario;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-public class ProfessorForm {
+public class EstudanteRequest {
 
     @Size(min = 3)
     @NotBlank
@@ -26,13 +26,8 @@ public class ProfessorForm {
     @Size(min = 8)
     @NotBlank
     private String senha;
-    @NotBlank
-    private String areaAtuacao;
-    @NotNull
-    private LocalDate inicioAtuacao;
 
     public Usuario converter() {
-        return new Usuario(nome, sobrenome, dataNasc, email, senha, areaAtuacao, inicioAtuacao);
+        return new Usuario(nome, sobrenome, dataNasc, email, senha);
     }
-
 }

@@ -1,4 +1,4 @@
-package educa.api.domain;
+package educa.api.request.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

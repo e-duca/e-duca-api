@@ -1,21 +1,18 @@
 package educa.api.controller;
 
-import educa.api.domain.Perfil;
-import educa.api.domain.Usuario;
-import educa.api.controller.dto.UsuarioEstudanteDto;
-import educa.api.controller.form.EstudanteForm;
+import educa.api.request.domain.Perfil;
+import educa.api.request.domain.Usuario;
+import educa.api.request.EstudanteRequest;
 import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
-import educa.api.utils.ListObj;
+import educa.api.response.UsuarioEstudanteResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,55 +29,42 @@ public class EstudanteController {
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<UsuarioEstudanteDto> create(@RequestBody @Valid EstudanteForm form, UriComponentsBuilder uriBuilder) {
-        form.setSenha(encoder.encode(form.getSenha()));
-        Usuario estudante = form.converter();
+    public ResponseEntity<UsuarioEstudanteResponse> create(@RequestBody @Valid EstudanteRequest estudanteRequest) {
+        estudanteRequest.setSenha(encoder.encode(estudanteRequest.getSenha()));
+        Usuario estudante = estudanteRequest.converter();
         Perfil perfilEstudante = perfilRepository.findByNome("ROLE_ESTUDANTE");
         estudante.adicionarPerfil(perfilEstudante);
         repository.save(estudante);
-        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getIdUsuario()).toUri();
-        return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
+        return ResponseEntity.status(201).body(repository.getEstudanteById(estudante.getIdUsuario()).get());
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioEstudanteDto>> read() {
-        List<Usuario> list = repository.findAll();
-        ListObj<Usuario> listObj = new ListObj<>(100);
-        for (Usuario usuario : list) {
-            if (usuario.getAreaAtuacao() == null && usuario.getInicioAtuacao() == null) {
-                listObj.add(usuario);
-            }
-        }
-        return listObj.getTamanho() == 0
+    public ResponseEntity<List<UsuarioEstudanteResponse>> read() {
+        List<UsuarioEstudanteResponse> list = repository.getEstudantes();
+        return list.isEmpty()
                 ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(UsuarioEstudanteDto.converter(listObj.all()));
+                : ResponseEntity.status(200).body(list);
+
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioEstudanteDto> read(@PathVariable int id) {
-        Optional<Usuario> estudante = repository.findById(id);
-        if (repository.existsById(id)) {
-            if (estudante.get().getAreaAtuacao() == null && estudante.get().getInicioAtuacao() == null) {
-                return ResponseEntity.status(200).body(new UsuarioEstudanteDto(estudante.get()));
-            }
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(400).build();
+    @GetMapping("/usuario-secao")
+    public ResponseEntity<UsuarioEstudanteResponse> read(@AuthenticationPrincipal Usuario usuario) {
+        Optional<UsuarioEstudanteResponse> estudante = repository.getEstudanteById(usuario.getIdUsuario());
+        return estudante.isPresent()
+                ? ResponseEntity.status(200).body(estudante.get())
+                : ResponseEntity.status(400).build();
     }
 
     @PutMapping
-    public ResponseEntity<UsuarioEstudanteDto> updateEstudante(
+    public ResponseEntity<UsuarioEstudanteResponse> updateEstudante(
             @RequestBody @Valid Usuario estudante,
             @AuthenticationPrincipal Usuario usuario) {
-        if (repository.existsById(usuario.getIdUsuario())) {
             estudante.setIdUsuario(usuario.getIdUsuario());
             estudante.setSenha(encoder.encode(estudante.getSenha()));
             Perfil perfilEstudante = perfilRepository.findByNome("ROLE_ESTUDANTE");
             estudante.adicionarPerfil(perfilEstudante);
             repository.save(estudante);
-            return ResponseEntity.status(200).body(new UsuarioEstudanteDto(estudante));
-        }
-        return ResponseEntity.status(404).build();
+            return ResponseEntity.status(200).body(repository.getEstudanteById(usuario.getIdUsuario()).get());
     }
 
 }

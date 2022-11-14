@@ -1,8 +1,7 @@
-package educa.api.controller.form;
+package educa.api.request;
 
-import educa.api.domain.Avaliacao;
-import educa.api.domain.Habilidade;
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Habilidade;
+import educa.api.request.domain.Usuario;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;
 
@@ -10,12 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
-public class ConteudoForm {
+public class ConteudoRequest {
 
     @Size(min = 4)
     @NotBlank
