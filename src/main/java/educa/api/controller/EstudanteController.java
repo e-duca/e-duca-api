@@ -37,7 +37,7 @@ public class EstudanteController {
         Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
         estudante.adicionarPerfil(perfilEstudante);
         repository.save(estudante);
-        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getId()).toUri();
+        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getIdUsuario()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
     }
 
@@ -72,7 +72,7 @@ public class EstudanteController {
             @PathVariable int id,
             @RequestBody @Valid Usuario estudante) {
         if (repository.existsById(id)) {
-            estudante.setId(id);
+            estudante.setIdUsuario(id);
             Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
             estudante.adicionarPerfil(perfilEstudante);
             repository.save(estudante);

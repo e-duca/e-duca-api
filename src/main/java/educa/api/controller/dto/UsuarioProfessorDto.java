@@ -21,7 +21,7 @@ public class UsuarioProfessorDto {
     private List<Perfil> perfil;
 
     public UsuarioProfessorDto(Usuario usuario) {
-        this.id = usuario.getId();
+        this.id = usuario.getIdUsuario();
         this.nome = usuario.getNome();
         this.sobrenome = usuario.getSobrenome();
         this.dataNasc = usuario.getDataNasc();

@@ -8,7 +8,6 @@ import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class ProfessorController {
         Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
         professor.adicionarPerfil(perfilProfessor);
         repository.save(professor);
-        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getId()).toUri();
+        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getIdUsuario()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioProfessorDto(professor));
     }
 
@@ -74,7 +73,7 @@ public class ProfessorController {
             @PathVariable int id,
             @RequestBody @Valid Usuario professor) {
         if (repository.existsById(id)) {
-            professor.setId(id);
+            professor.setIdUsuario(id);
             Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
             professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);

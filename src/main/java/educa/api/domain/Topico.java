@@ -17,6 +17,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_topico")
 public class Topico {
 
     @Id
