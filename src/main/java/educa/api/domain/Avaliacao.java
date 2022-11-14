@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_avaliacao")
 public class Avaliacao {
 
     @Id
@@ -25,6 +26,6 @@ public class Avaliacao {
     @JsonIgnore
     private Conteudo conteudo;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
 
 }

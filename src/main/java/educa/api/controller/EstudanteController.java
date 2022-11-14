@@ -35,10 +35,10 @@ public class EstudanteController {
     public ResponseEntity<UsuarioEstudanteDto> create(@RequestBody @Valid EstudanteForm form, UriComponentsBuilder uriBuilder) {
         form.setSenha(encoder.encode(form.getSenha()));
         Usuario estudante = form.converter();
-        Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
+        Perfil perfilEstudante = perfilRepository.findByNome("ROLE_ESTUDANTE");
         estudante.adicionarPerfil(perfilEstudante);
         repository.save(estudante);
-        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getId()).toUri();
+        URI uri = uriBuilder.path("/usuarios/estudantes/{id}").buildAndExpand(estudante.getIdUsuario()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioEstudanteDto(estudante));
     }
 
@@ -72,10 +72,10 @@ public class EstudanteController {
     public ResponseEntity<UsuarioEstudanteDto> updateEstudante(
             @RequestBody @Valid Usuario estudante,
             @AuthenticationPrincipal Usuario usuario) {
-        if (repository.existsById(usuario.getId())) {
-            estudante.setId(usuario.getId());
+        if (repository.existsById(usuario.getIdUsuario())) {
+            estudante.setIdUsuario(usuario.getIdUsuario());
             estudante.setSenha(encoder.encode(estudante.getSenha()));
-            Perfil perfilEstudante = perfilRepository.findByNome("ESTUDANTE");
+            Perfil perfilEstudante = perfilRepository.findByNome("ROLE_ESTUDANTE");
             estudante.adicionarPerfil(perfilEstudante);
             repository.save(estudante);
             return ResponseEntity.status(200).body(new UsuarioEstudanteDto(estudante));

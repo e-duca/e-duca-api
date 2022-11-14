@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_resposta")
 public class Resposta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idResposta;
     @Size(min = 3, max = 5000)
     private String resposta;
     private LocalDateTime dataCriacao = LocalDateTime.now();
@@ -25,6 +26,6 @@ public class Resposta {
     @JsonIgnore
     private Topico topico;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
 
 }

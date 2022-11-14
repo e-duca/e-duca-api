@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_conteudo")
 public class Conteudo {
 
     @Id
@@ -42,7 +43,7 @@ public class Conteudo {
     @NotNull
     private int tempoEstimado;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
     @ManyToOne
     @NotNull
     private Habilidade habilidade;

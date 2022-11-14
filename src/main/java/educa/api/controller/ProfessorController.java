@@ -8,7 +8,6 @@ import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
 import educa.api.utils.ListObj;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,10 +36,10 @@ public class ProfessorController {
     public ResponseEntity<UsuarioProfessorDto> create(@RequestBody @Valid ProfessorForm form, UriComponentsBuilder uriBuilder) {
         form.setSenha(encoder.encode(form.getSenha()));
         Usuario professor = form.converter();
-        Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+        Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
         professor.adicionarPerfil(perfilProfessor);
         repository.save(professor);
-        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getId()).toUri();
+        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getIdUsuario()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioProfessorDto(professor));
     }
 
@@ -74,10 +73,10 @@ public class ProfessorController {
     public ResponseEntity<Usuario> updateProfessor(
             @RequestBody @Valid Usuario professor,
             @AuthenticationPrincipal Usuario usuario) {
-        if (repository.existsById(usuario.getId())) {
-            professor.setId(usuario.getId());
+        if (repository.existsById(usuario.getIdUsuario())) {
+            professor.setIdUsuario(usuario.getIdUsuario());
             professor.setSenha(encoder.encode(professor.getSenha()));
-            Perfil perfilProfessor = perfilRepository.findByNome("PROFESSOR");
+            Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
             professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);
             return ResponseEntity.status(200).body(professor);

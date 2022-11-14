@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Data
+@Table(name = "tb_habilidade")
 public class Habilidade {
 
     @Id
