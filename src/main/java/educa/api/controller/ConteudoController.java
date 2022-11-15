@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,12 +38,17 @@ public class ConteudoController {
             @AuthenticationPrincipal Usuario usuario) {
         Optional<Habilidade> habilidade = habilidadeRepository.findByCodigo(postagem.getHabilidade().getCodigo());
 
-        if (habilidade.isPresent()) {
-            postagem.setUsuario(usuario);
-            postagem.setHabilidade(habilidade.get());
-            return ResponseEntity.status(201).body(repository.save(postagem));
+        if (habilidade.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Habilidade não existe"
+            );
         }
-        return ResponseEntity.status(400).build();
+
+        postagem.setUsuario(usuario);
+        postagem.setHabilidade(habilidade.get());
+        return ResponseEntity.status(201).body(repository.save(postagem));
+
     }
 
     @GetMapping
@@ -103,9 +110,15 @@ public class ConteudoController {
                 repository.save(conteudo.get());
                 return ResponseEntity.status(200).body(conteudo.get());
             }
-            return ResponseEntity.status(403).build();
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Usuário não autorizado para atualização, identificador não compatível"
+            );
         }
-        return ResponseEntity.status(404).build();
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Identificador não encontrado"
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -116,9 +129,15 @@ public class ConteudoController {
                 repository.deleteById(id);
                 return ResponseEntity.status(200).build();
             }
-            return ResponseEntity.status(403).build();
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Usuário não autorizado para atualização, identificador não compatível"
+            );
         }
-        return ResponseEntity.status(404).build();
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Identificador não encontrado"
+        );
     }
 
     @GetMapping("/order")
