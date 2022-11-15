@@ -6,9 +6,11 @@ import educa.api.request.domain.Usuario;
 import educa.api.repository.AvaliacaoRepository;
 import educa.api.repository.ConteudoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -44,9 +46,15 @@ public class AvaliacaoController {
                 avaliacaoRepository.save(avaliacao);
                 return ResponseEntity.status(200).body(avaliacao);
             }
-            return ResponseEntity.status(401).build();
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Usuário não autorizado para atualização, identificador não compatível"
+            );
         }
-        return ResponseEntity.status(400).build();
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Identificador não encontrado"
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -57,8 +65,14 @@ public class AvaliacaoController {
                 avaliacaoRepository.deleteById(id);
                 return ResponseEntity.status(200).build();
             }
-            return ResponseEntity.status(401).build();
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Usuário não autorizado para atualização, identificador não compatível"
+            );
         }
-        return ResponseEntity.status(404).build();
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Identificador não encontrado"
+        );
     }
 }
