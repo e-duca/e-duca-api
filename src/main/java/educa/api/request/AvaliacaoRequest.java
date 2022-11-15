@@ -11,7 +11,7 @@ public class AvaliacaoRequest {
     @Min(1)
     private int idConteudo;
     private int idUsuario;
-    @Size(min = 3, max = 15)
+    @Size(min = 3, max = 20)
     private String avaliacao;
 
 }
