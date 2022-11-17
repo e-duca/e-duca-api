@@ -16,11 +16,6 @@ public class ConteudoRequest {
     @Size(min = 4)
     @NotBlank
     private String titulo;
-    @URL
-    @NotBlank
-    private String url;
-    @Size(min = 4)
-    private String artigo;
     @Size(min = 3, max = 5000)
     private String texto;
     @URL

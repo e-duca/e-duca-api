@@ -101,8 +101,6 @@ public class ConteudoController {
             if (validaAutor.get().getUsuario().getEmail().equals(usuario.getEmail())) {
                 Optional<Conteudo> conteudo = repository.findById(id);
                 conteudo.get().setTitulo(postagem.getTitulo());
-                conteudo.get().setUrl(postagem.getUrl());
-                conteudo.get().setArtigo(postagem.getArtigo());
                 conteudo.get().setTexto(postagem.getTexto());
                 conteudo.get().setUrlVideo(postagem.getUrlVideo());
                 conteudo.get().setUsuario(usuario);
