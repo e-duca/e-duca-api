@@ -1,6 +1,8 @@
 package educa.api.controller;
 
 import educa.api.config.security.TokenService;
+import educa.api.repository.UsuarioRepository;
+import educa.api.request.domain.Usuario;
 import educa.api.response.TokenResponse;
 import educa.api.request.UsuarioLoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +12,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,6 +28,9 @@ public class AuthenticationController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private UsuarioRepository repository;
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginRequest usuarioLoginDto) {
@@ -41,5 +45,11 @@ public class AuthenticationController {
                     "Usuário e/ou senha inválidos"
             );
         }
+    }
+
+    @GetMapping("/usuario-secao")
+    public ResponseEntity<Usuario> read(@AuthenticationPrincipal Usuario usuarioToken) {
+        Optional<Usuario> usuario = repository.findById(usuarioToken.getIdUsuario());
+        return ResponseEntity.status(200).body(usuario.get());
     }
 }

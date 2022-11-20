@@ -44,7 +44,6 @@ public class Usuario implements UserDetails {
     private String areaAtuacao;
     private LocalDate inicioAtuacao;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
     private List<Perfil> perfis = new ArrayList<>();
 
     public Usuario(String nome, String sobrenome, LocalDate dataNasc, String email, String senha) {
