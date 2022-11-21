@@ -33,7 +33,7 @@ public class ConteudoController {
     @Autowired
     private HabilidadeRepository habilidadeRepository;
 
-    private PilhaObj<Conteudo> pilhaRefazer;
+    private PilhaObj<Conteudo> pilhaRefazer = new PilhaObj<>(100);
 
     @PostMapping
     public ResponseEntity<Conteudo> create(
