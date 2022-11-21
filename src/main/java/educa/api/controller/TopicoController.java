@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/topicos")
@@ -45,6 +46,15 @@ public class TopicoController {
                     ? ResponseEntity.status(204).build()
                     : ResponseEntity.status(200).body(topicos);
         }
+    }
+
+    @GetMapping("/usuario-secao")
+    public ResponseEntity<List<Topico>> readByEstudante(
+            @AuthenticationPrincipal Usuario usuario) {
+        List<Topico> topicos = repository.findByUsuario(usuario);
+        return topicos.isEmpty()
+                ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(topicos);
     }
 
     @PutMapping("/{id}")
