@@ -7,10 +7,12 @@ import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
 import educa.api.response.UsuarioProfessorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,6 +33,14 @@ public class ProfessorController {
 
     @PostMapping
     public ResponseEntity<UsuarioProfessorResponse> create(@RequestBody @Valid ProfessorRequest professorRequest) {
+
+        if (repository.existsByEmail(professorRequest.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "E-mail já cadastrado na base de dados."
+            );
+        }
+
         professorRequest.setSenha(encoder.encode(professorRequest.getSenha()));
         Usuario professor = professorRequest.converter();
         Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");

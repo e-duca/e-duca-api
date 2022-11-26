@@ -34,6 +34,12 @@ public class EstudanteController {
 
     @PostMapping
     public ResponseEntity<UsuarioEstudanteResponse> create(@RequestBody @Valid EstudanteRequest estudanteRequest) {
+        if (repository.existsByEmail(estudanteRequest.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "E-mail já cadastrado na base de dados."
+            );
+        }
         estudanteRequest.setSenha(encoder.encode(estudanteRequest.getSenha()));
         Usuario estudante = estudanteRequest.converter();
         Perfil perfilEstudante = perfilRepository.findByNome("ROLE_ESTUDANTE");

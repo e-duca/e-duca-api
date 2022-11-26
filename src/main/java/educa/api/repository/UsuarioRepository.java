@@ -33,4 +33,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "from Usuario u where u.areaAtuacao = null")
     List<UsuarioEstudanteResponse> getEstudantes();
 
+    boolean existsByEmail(String email);
 }
