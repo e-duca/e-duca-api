@@ -11,6 +11,8 @@ import java.util.List;
 public interface TopicoRepository extends JpaRepository<Topico, Integer> {
     Page<Topico> findByTitulo(String titulo, Pageable paginacao);
 
-    List<Topico> findByUsuario(Usuario usuario);
+    Page<Topico> findByTituloAndUsuarioIdUsuario(String titulo, int idUsuario, Pageable paginacao);
+
+    Page<Topico> findByUsuarioIdUsuario(int idUsuario, Pageable paginacao);
 
 }
