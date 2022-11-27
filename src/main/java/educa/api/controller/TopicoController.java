@@ -60,9 +60,11 @@ public class TopicoController {
     @PutMapping("/{id}")
     public ResponseEntity<Topico> update(
             @PathVariable int id,
-            @RequestBody @Valid Topico topico) {
+            @RequestBody @Valid Topico topico,
+            @AuthenticationPrincipal Usuario estudante) {
         if (repository.existsById(id)) {
             topico.setIdTopico(id);
+            topico.setUsuario(estudante);
             repository.save(topico);
             return ResponseEntity.status(200).body(topico);
         }

@@ -39,7 +39,6 @@ public class Usuario implements UserDetails {
     private String email;
     @Size(min = 8)
     @NotBlank
-    @JsonIgnore
     private String senha;
     private String areaAtuacao;
     private LocalDate inicioAtuacao;
