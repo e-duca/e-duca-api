@@ -48,13 +48,24 @@ public class TopicoController {
         }
     }
 
+
     @GetMapping("/usuario-secao")
-    public ResponseEntity<List<Topico>> readByEstudante(
-            @AuthenticationPrincipal Usuario usuario) {
-        List<Topico> topicos = repository.findByUsuario(usuario);
-        return topicos.isEmpty()
-                ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(topicos);
+    public ResponseEntity<Page<Topico>> readByEstudante(
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(sort = "idTopico", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable paginacao,
+            @AuthenticationPrincipal Usuario usuario
+    ) {
+        if (titulo == null) {
+            Page<Topico> topicos = repository.findByUsuarioIdUsuario(usuario.getIdUsuario(), paginacao);
+            return topicos.isEmpty()
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(topicos);
+        } else {
+            Page<Topico> topicos = repository.findByTituloAndUsuarioIdUsuario(titulo, usuario.getIdUsuario(), paginacao);
+            return topicos.isEmpty()
+                    ? ResponseEntity.status(204).build()
+                    : ResponseEntity.status(200).body(topicos);
+        }
     }
 
     @PutMapping("/{id}")
