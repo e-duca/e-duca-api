@@ -44,12 +44,29 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/usuarios/estudantes").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/usuarios/estudantes").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/usuarios/professores").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/usuarios/professores").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/usuarios/estudantes/").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/usuarios/estudantes/").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/usuarios/professores/").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/usuarios/professores/").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/topicos/").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.POST, "/api/topicos/").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.PUT, "/api/topicos/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.DELETE, "/api/topicos/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.POST, "/api/topicos/respostas/").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.PUT, "/api/topicos/respostas/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.DELETE, "/api/topicos/respostas/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.POST, "/api/conteudos/avaliacoes").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.PUT, "/api/conteudos/avaliacoes/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.DELETE, "/api/conteudos/avaliacoes/**").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.POST, "/api/conteudos/").hasRole("PROFESSOR")
+                .antMatchers(HttpMethod.GET, "/api/conteudos/").hasRole("PROFESSOR")
+                .antMatchers(HttpMethod.GET, "/api/conteudos/").hasRole("ESTUDANTE")
+                .antMatchers(HttpMethod.PUT, "/api/conteudos/**").hasRole("PROFESSOR")
+                .antMatchers(HttpMethod.DELETE, "/api/conteudos/**").hasRole("PROFESSOR")
+                .antMatchers(HttpMethod.GET, "/api/habilidades").hasRole("PROFESSOR")
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .anyRequest().authenticated() // o resto bloqueia
+                .and().cors()
                 .and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, repository), UsernamePasswordAuthenticationFilter.class);
     }

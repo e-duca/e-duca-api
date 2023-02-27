@@ -1,4 +1,4 @@
-package educa.api.domain;
+package educa.api.request.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -12,14 +12,17 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "tb_perfil")
 public class Perfil implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id_perfil")
+    private Integer idPerfil;
     private String nome;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return this.nome;
     }

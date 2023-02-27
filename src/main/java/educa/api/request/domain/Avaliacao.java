@@ -1,5 +1,4 @@
-package educa.api.domain;
-
+package educa.api.request.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -10,23 +9,23 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Data
-public class Habilidade {
+@Table(name = "tb_avaliacao")
+public class Avaliacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idHabilidade;
-    @Size(min = 3)
+    private Integer idAvaliacao;
     @NotBlank
-    private String codigo;
-    @NotBlank
-    @Size(max = 500)
-    private String descricao;
+    @Size(min = 5)
+    private String avaliacao;
     @ManyToOne
     @JsonIgnore
     private Conteudo conteudo;
+    @ManyToOne
+    private Usuario usuario;
 
 }

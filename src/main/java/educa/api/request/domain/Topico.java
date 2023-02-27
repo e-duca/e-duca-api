@@ -1,4 +1,4 @@
-package educa.api.domain;
+package educa.api.request.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +17,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_topico")
 public class Topico {
 
     @Id
@@ -30,7 +31,7 @@ public class Topico {
     @Enumerated(EnumType.STRING)
     private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
     @OneToMany(mappedBy = "topico")
     private List<Resposta> respostas = new ArrayList<>();
 

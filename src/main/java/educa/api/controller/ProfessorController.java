@@ -1,18 +1,20 @@
 package educa.api.controller;
 
-import educa.api.domain.Usuario;
-import educa.api.controller.dto.UsuarioProfessorDto;
-import educa.api.controller.form.ProfessorForm;
+import educa.api.request.domain.Perfil;
+import educa.api.request.domain.Usuario;
+import educa.api.request.ProfessorRequest;
+import educa.api.repository.PerfilRepository;
 import educa.api.repository.UsuarioRepository;
-import educa.api.utils.ListObj;
+import educa.api.response.UsuarioProfessorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,59 +24,57 @@ public class ProfessorController {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     @Autowired
     private PasswordEncoder encoder;
 
     @PostMapping
-    public ResponseEntity<UsuarioProfessorDto> create(@RequestBody @Valid ProfessorForm form, UriComponentsBuilder uriBuilder) {
-        form.setSenha(encoder.encode(form.getSenha()));
-        Usuario professor = form.converter();
+    public ResponseEntity<UsuarioProfessorResponse> create(@RequestBody @Valid ProfessorRequest professorRequest) {
+
+        if (repository.existsByEmail(professorRequest.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "E-mail já cadastrado na base de dados."
+            );
+        }
+
+        professorRequest.setSenha(encoder.encode(professorRequest.getSenha()));
+        Usuario professor = professorRequest.converter();
+        Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
+        professor.adicionarPerfil(perfilProfessor);
         repository.save(professor);
-        URI uri = uriBuilder.path("/usuarios/professor/{id}").buildAndExpand(professor.getId()).toUri();
-        return ResponseEntity.created(uri).body(new UsuarioProfessorDto(professor));
+        return ResponseEntity.status(201).body(repository.getProfessorById(professor.getIdUsuario()).get());
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioProfessorDto>> read() {
-        List<Usuario> list = repository.findAll();
-        ListObj<Usuario> listObj = new ListObj<>(100);
-        for (Usuario usuario : list) {
-            if (!(usuario.getAreaAtuacao() == null && usuario.getInicioAtuacao() == null)) {
-                listObj.add(usuario);
-            }
-        }
-        return listObj.getTamanho() == 0
+    public ResponseEntity<List<UsuarioProfessorResponse>> read() {
+        List<UsuarioProfessorResponse> list = repository.getProfessores();
+        return list.isEmpty()
                 ? ResponseEntity.status(204).build()
-                : ResponseEntity.status(200).body(UsuarioProfessorDto.converter(listObj.all()));
+                : ResponseEntity.status(200).body(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Usuario>> readById(@PathVariable int id) {
-        Optional<Usuario> professor = repository.findById(id);
+    @GetMapping("/usuario-secao")
+    public ResponseEntity<UsuarioProfessorResponse> read(@AuthenticationPrincipal Usuario usuario) {
+        Optional<UsuarioProfessorResponse> professor = repository.getProfessorById(usuario.getIdUsuario());
         return professor.isPresent()
-                ? ResponseEntity.status(200).body(professor)
-                : ResponseEntity.status(204).build();
+                ? ResponseEntity.status(200).body(professor.get())
+                : ResponseEntity.status(400).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateProfessor(
-            @PathVariable int id,
-            @RequestBody @Valid Usuario professor) {
-        if (repository.existsById(id)) {
-            professor.setId(id);
+    @PutMapping
+    public ResponseEntity<UsuarioProfessorResponse> updateProfessor(
+            @RequestBody @Valid Usuario professor,
+            @AuthenticationPrincipal Usuario usuario) {
+            professor.setIdUsuario(usuario.getIdUsuario());
+            professor.setSenha(encoder.encode(professor.getSenha()));
+            Perfil perfilProfessor = perfilRepository.findByNome("ROLE_PROFESSOR");
+            professor.adicionarPerfil(perfilProfessor);
             repository.save(professor);
-            return ResponseEntity.status(200).body(professor);
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
+            return ResponseEntity.status(200).body(repository.getProfessorById(usuario.getIdUsuario()).get());
     }
 
 }

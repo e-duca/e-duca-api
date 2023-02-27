@@ -1,4 +1,4 @@
-package educa.api.domain;
+package educa.api.request.domain;
 
 
 import lombok.AllArgsConstructor;
@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,25 +21,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tb_conteudo")
 public class Conteudo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idConteudo;
     @Size(min = 4)
+    @NotBlank
     private String titulo;
-    @URL
-    private String url;
-    @Size(min = 4)
-    private String artigo;
     @Size(min = 3, max = 5000)
     private String texto;
+    @URL
+    private String urlVideo;
     private LocalDateTime dataCriacao = LocalDateTime.now();
+    @NotNull
     private int tempoEstimado;
     @ManyToOne
-    private Usuario autor;
+    private Usuario usuario;
     @ManyToOne
-    private Habilidade habilidade ;
+    @NotNull
+    private Habilidade habilidade;
     @OneToMany(mappedBy = "conteudo")
     private List<Avaliacao> avaliacoes = new ArrayList<>();
 

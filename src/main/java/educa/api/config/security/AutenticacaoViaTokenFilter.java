@@ -1,6 +1,6 @@
 package educa.api.config.security;
 
-import educa.api.domain.Usuario;
+import educa.api.request.domain.Usuario;
 import educa.api.repository.UsuarioRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
