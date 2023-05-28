@@ -64,6 +64,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/api/conteudos/**").hasRole("PROFESSOR")
                 .antMatchers(HttpMethod.DELETE, "/api/conteudos/**").hasRole("PROFESSOR")
                 .antMatchers(HttpMethod.GET, "/api/habilidades").hasRole("PROFESSOR")
+                .antMatchers(HttpMethod.GET, "/api/conteudos/avaliacoes/usuario-secao").hasRole("PROFESSOR")
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .anyRequest().authenticated() // o resto bloqueia
                 .and().cors()
