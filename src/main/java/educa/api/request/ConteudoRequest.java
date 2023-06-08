@@ -16,7 +16,7 @@ public class ConteudoRequest {
     @Size(min = 4)
     @NotBlank
     private String titulo;
-    @Size(min = 3, max = 5000)
+    @Size(max = 5000)
     private String texto;
     @URL
     private String urlVideo;
