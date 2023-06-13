@@ -6,6 +6,7 @@ import educa.api.request.domain.Usuario;
 import educa.api.repository.AvaliacaoRepository;
 import educa.api.repository.ConteudoRepository;
 import educa.api.response.AvaliacaoResponse;
+import educa.api.response.AvalicacaoCountResponse;
 import educa.api.response.UsuarioEstudanteResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,16 @@ public class AvaliacaoController {
             @AuthenticationPrincipal Usuario professor
     ) {
         Optional<AvaliacaoResponse> avaliacao = avaliacaoRepository.getAvaliacaoCountByIdProfessor(professor.getIdUsuario());
+        return avaliacao.isEmpty()
+                ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(avaliacao);
+    }
+
+    @GetMapping("/total-por-avaliacao/usuario-secao")
+    public ResponseEntity<?> getTotalAvaByCountUser(
+            @AuthenticationPrincipal Usuario professor
+    ) {
+        Optional<List<AvalicacaoCountResponse>> avaliacao = avaliacaoRepository.getSomaAvaliacoesPorTipo(professor.getIdUsuario());
         return avaliacao.isEmpty()
                 ? ResponseEntity.status(204).build()
                 : ResponseEntity.status(200).body(avaliacao);
